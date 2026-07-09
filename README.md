@@ -38,9 +38,19 @@ Answered key EDA questions about pricing, days on market, and county-level trend
 - `Week2_sold.py` – validates sold dataset, saves sold_validated.csv
 - `Week2_listings.py` – validates listings dataset, saves listings_validated.csv
 
+## Week 2-3 – Mortgage Rate Enrichment
+Fetched the 30-year fixed mortgage rate (MORTGAGE30US) from the St. Louis 
+Federal Reserve (FRED), resampled from weekly to monthly averages, and merged 
+onto both datasets using a year_month key derived from transaction dates.
+0 null rates after merge on both datasets.
+
+**Scripts:**
+- `Week2-3_mortgage.py` – produces sold_with_rates.csv and listings_with_rates.csv
+
 ## How to Run
 1. Place all monthly CSV files in the csv/ folder
 2. Run Week1_listings.py to generate listings.csv
 3. Run Week1_sold.py to generate sold.csv
 4. Run Week2_sold.py to validate and analyze the sold dataset
 5. Run Week2_listings.py to validate and analyze the listings dataset
+6. Run Week2-3_mortgage.py to enrich both datasets with mortgage rates
