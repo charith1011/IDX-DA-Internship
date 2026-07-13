@@ -2,14 +2,14 @@ import pandas as pd
 from pathlib import Path
 
 # Week 1 – Sold Dataset Aggregation
-# Combines monthly MLS Sold files from March 2024 through April 2026,
+# Combines monthly MLS Sold files from January 2024 through June 2026,
 # filters to Residential only, and saves as sold.csv.
 # Regular file preferred over _filled version where both exist.
 # _filled files have 2 extra columns at the end which are dropped.
 
 csv_folder = Path('/Users/charithreddydasari/Documents/IDX Exchange Internship/csv')
 
-months = pd.period_range(start="2024-03", end="2026-04", freq="M").strftime("%Y%m").tolist()
+months = pd.period_range(start="2024-01", end="2026-06", freq="M").strftime("%Y%m").tolist()
 
 # Collect sold files, prefer regular over _filled
 sold_files = []
@@ -34,11 +34,15 @@ for f, is_filled in sold_files:
     sold_frames.append(df)
 
 sold = pd.concat(sold_frames, ignore_index=True)
-print(f"Rows after concatenation: {len(sold):,}")
+rows_after_concat = len(sold)
+print(f"Rows after concatenation: {rows_after_concat:,}")
+# Rows after concatenation: 665,619 
 
 # Filter to Residential only
 sold_residential = sold[sold["PropertyType"] == "Residential"].copy()
-print(f"Rows after Residential filter: {len(sold_residential):,}")
+rows_after_filter = len(sold_residential)
+print(f"Rows after Residential filter: {rows_after_filter:,}")
+# Rows after Residential filter: 448,093
 
 # Save
 sold_residential.to_csv(csv_folder / "sold.csv", index=False)
