@@ -8,13 +8,28 @@ to build housing market insights and Tableau dashboards.
 - Python (Pandas)
 - Tableau Desktop Public Edition
 
+## Week 0 – MLS Data Pipeline Orientation
+Reviewed the Real Estate Data Analyst Primer and Trestle Property Metadata 
+reference to understand MLS data structure, the real estate transaction 
+lifecycle (Listing → Pending → Closed), and key fields (ListPrice, ClosePrice, 
+StandardStatus, DaysOnMarket, PropertyType). Downloaded all available monthly 
+CRMLSListing and CRMLSSold CSV files via FTP using FileZilla.
+
 ## Week 1 – Monthly Dataset Aggregation
-Combined monthly MLS Listing and Sold CSV files from March 2024 through 
-April 2026 into two unified datasets, filtered to Residential properties only.
+Combined monthly MLS Listing and Sold CSV files from January 2024 through 
+June 2026 into two unified datasets, filtered to Residential properties only.
+
+**Results:** After adding May and June data
+- Listings: 933,278 rows after concatenation → 594,521 after Residential filter
+- Sold: 665,619 rows after concatenation → 448,093 after Residential filter
 
 **Scripts:**
 - `Week1_listings.py` – produces listings.csv
 - `Week1_sold.py` – produces sold.csv
+
+Note: Some Sold months are only available as `_filled` versions (2 extra 
+trailing columns dropped per team guidance); regular version is preferred 
+where both exist.
 
 ## Week 2 – Dataset Structuring and Validation
 Inspected both datasets for structure, missing values, and numeric distributions.
