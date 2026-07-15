@@ -91,6 +91,52 @@ column cleanup carries forward rather than being undone.
 **Scripts:**
 - `Week2-3_mortgage.py` – produces sold_with_rates.csv and listings_with_rates.csv
 
+## Week 4-5 – Data Cleaning and Preparation
+Built on the Week 2-3 enriched datasets (`sold_with_rates.csv` and
+`listings_with_rates.csv`). Converted CloseDate, PurchaseContractDate,
+ListingContractDate, and ContractStatusChangeDate to real datetime objects,
+confirmed all numeric fields are properly typed, and dropped columns not
+used by any required dashboard, metric, or filter (per Slack guidance from
+Aidan: keep only fields that feed the Market Analysis / Competitive Analysis
+dashboards or a named engineered metric). This is a judgment-call drop, not
+a >90%-missing drop like Week 2 — dropped columns include buyer-side and
+co-list agent detail, board/association codes, commission fields, property
+amenity fields, school name fields (Week 6 sources school districts via a
+separate lat/long join instead), and a few fields redundant with ones
+already kept (e.g. ListAgentFullName instead of the First/Last split).
+
+Per the handbook's flag-don't-delete approach, no rows were removed at this
+stage — invalid values and date-order violations were flagged with new
+boolean columns instead, so the row count is unchanged and the flags are
+available for filtering later.
+
+**Key findings (Sold):** 448,093 rows before and after (unchanged) | 69
+columns → 30 after dropping 39 unnecessary columns → 42 after adding 12
+flag columns
+- Invalid values flagged: ClosePrice ≤ 0: 1 | LivingArea ≤ 0: 165 |
+  DaysOnMarket < 0: 50 | negative Bedrooms/Bathrooms: 0
+- Date consistency flags: listing_after_close_flag: 68 |
+  purchase_after_close_flag: 241 | negative_timeline_flag: 290
+- Geographic flags: missing coords: 16,225 | zero coords: 37 | positive
+  longitude: 31 | implausible coords (outside CA bounding box): 101
+
+**Key findings (Listings):** 594,521 rows before and after (unchanged) | 64
+columns → 45 (31 dropped as unnecessary, 12 flag columns added)
+- Invalid values flagged: ClosePrice ≤ 0: 0 | LivingArea ≤ 0: 377 |
+  DaysOnMarket < 0: 30 | negative Bedrooms/Bathrooms: 0
+- Date consistency flags: listing_after_close_flag: 83 |
+  purchase_after_close_flag: 264 | negative_timeline_flag: 294 (naturally
+  smaller signal than Sold in absolute terms given the dataset size, since
+  most listings don't yet have a CloseDate/PurchaseContractDate to compare)
+- Geographic flags: missing coords: 80,761 | zero coords: 73 | positive
+  longitude: 79 | implausible coords (outside CA bounding box): 339
+- Note: MlsStatus was kept here (unlike Sold) since listings mixes
+  active/pending/closed records and this is what distinguishes them
+
+**Scripts:**
+- `Week4-5_sold.py` – cleans sold dataset, saves sold_cleaned.csv and sold_geo_quality_summary.csv
+- `Week4-5_listings.py` – cleans listings dataset, saves listings_cleaned.csv and listings_geo_quality_summary.csv
+
 ## How to Run
 1. Place all monthly CSV files in the csv/ folder
 2. Run Week1_listings.py to generate listings.csv
@@ -98,3 +144,5 @@ column cleanup carries forward rather than being undone.
 4. Run Week2_sold.py to validate and analyze the sold dataset
 5. Run Week2_listings.py to validate and analyze the listings dataset
 6. Run Week2-3_mortgage.py to enrich both datasets with mortgage rates
+7. Run Week4-5_sold.py to clean and flag the sold dataset
+8. Run Week4-5_listings.py to clean and flag the listings dataset
